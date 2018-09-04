@@ -14,16 +14,33 @@ var PopText = function(){
 	this.leftPx = "";
 };
 
+function queryEle(selector){ 
+	var method = selector.substr(0,1) == "#" ? "getElementById":"getElementsByClassName";
+	return document[method](selector.substr(1));
+}
 
-document.querySelector("#spanButton").addEventListener("click",function(){
+/*初始化弹幕发送弹幕*/
+function sendPop(){
 	var popText = new PopText();
-	popText.value = document.querySelector("#text").value;
+	popText.value = queryEle("#text").value;
 	initPop(popText);
-});
+	queryEle("#text").value ="";
+}
+
+/*为输入框添加键盘事件*/
+queryEle("#text").onkeydown = function(e){
+	var keyNum = window.event ? e.keyCode :e.which;
+	if(keyNum == 13){
+		sendPop();
+	}
+};
+
+/*为button添加click事件监听*/
+queryEle("#spanButton").addEventListener("click",sendPop);
 
 /*初始化弹幕属性，并让其出现在屏幕上*/
 function initPop(pop){
-	pop.leftPx = document.querySelector("#container").clientWidth + "px";
+	pop.leftPx = queryEle("#container").clientWidth + "px";
 	pop.topPx = randomTop();
 	pop.color = randomColor();
 	creatPop(pop);
@@ -32,15 +49,14 @@ function initPop(pop){
 /*生成弹幕*/
 function creatPop(pop){
 	var popText = document.createElement("span");
-	var container = document.querySelector("#container");
+	var container = queryEle("#container");
 	popText.style.color = pop.color;
-	popText.style.position = "absolute";
 	popText.textContent = pop.value;
 	popText.style.top = pop.topPx;
-	popText.style.fontSize = "22px";
 	popText.style.left = pop.leftPx;
+	popText.className = "popText";
 	container.appendChild(popText);
-	movePop(popText,document.querySelector("#container").clientWidth);
+	movePop(popText,queryEle("#container").clientWidth);
 }
 
 
@@ -48,18 +64,18 @@ function movePop(popText,left){
 	var speed = 1;/*每次减少1px，移动速率*/
 	left = left - speed;
 	popText.style.left = left +"px";
-	if(left >= -20){
+	if(left >= -1000){
 		requestAnimationFrame(function(){
 			movePop(popText,left);
 		});/*参数是function，运用的是浏览器自带的渲染速率，完全可以替代setInteval*/
 	}else{
-		document.querySelector("#container").removeChild(popText);
+		queryEle("#container").removeChild(popText);
 	}
 }
 
 /*取得随机top值*/
 function randomTop(){
-	var t1 = document.querySelector("#container");
+	var t1 = queryEle("#container");
 	return Math.round((Math.random())*(t1.clientHeight-30)) + "px";
 }
 
@@ -75,3 +91,16 @@ function randomColor(){
 	// 一行代码解决随机颜色
 	return "#" + Math.random().toString(16).slice(-6);
 }
+
+function init(){
+	for(let i = 0 ; i < 5; i++){
+		setTimeout(function (){
+			var pop = new PopText();
+			pop.value = "这是一个漂亮的弹幕";
+			pop.color = randomColor();
+			pop.topPx = randomTop();
+			creatPop(pop);
+		},i*2000)
+	}
+}
+init();
