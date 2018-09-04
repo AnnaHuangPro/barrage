@@ -35,6 +35,10 @@ queryEle("#text").onkeydown = function(e){
 	}
 };
 
+queryEle("#popText").addEventListener("hover",function(){
+	
+})
+
 /*为button添加click事件监听*/
 queryEle("#spanButton").addEventListener("click",sendPop);
 
@@ -55,6 +59,7 @@ function creatPop(pop){
 	popText.style.top = pop.topPx;
 	popText.style.left = pop.leftPx;
 	popText.className = "popText";
+	popText.id = "popText";
 	container.appendChild(popText);
 	movePop(popText,queryEle("#container").clientWidth);
 }
