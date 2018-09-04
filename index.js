@@ -36,7 +36,7 @@ queryEle("#text").onkeydown = function(e){
 };
 
 queryEle("#popText").addEventListener("hover",function(){
-	
+
 })
 
 /*为button添加click事件监听*/
@@ -54,6 +54,7 @@ function initPop(pop){
 function creatPop(pop){
 	var popText = document.createElement("span");
 	var container = queryEle("#container");
+	var speed = 2;/*每次减少1px，移动速率*/
 	popText.style.color = pop.color;
 	popText.textContent = pop.value;
 	popText.style.top = pop.topPx;
@@ -61,17 +62,17 @@ function creatPop(pop){
 	popText.className = "popText";
 	popText.id = "popText";
 	container.appendChild(popText);
-	movePop(popText,queryEle("#container").clientWidth);
+	movePop(popText,queryEle("#container").clientWidth,speed);
 }
 
 
-function movePop(popText,left){
-	var speed = 1;/*每次减少1px，移动速率*/
+function movePop(popText,left,speed){
+	// var speed = 1;/*每次减少1px，移动速率*/
 	left = left - speed;
 	popText.style.left = left +"px";
 	if(left >= -1000){
 		requestAnimationFrame(function(){
-			movePop(popText,left);
+			movePop(popText,left,speed);
 		});/*参数是function，运用的是浏览器自带的渲染速率，完全可以替代setInteval*/
 	}else{
 		queryEle("#container").removeChild(popText);
