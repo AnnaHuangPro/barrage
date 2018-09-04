@@ -13,6 +13,7 @@ var PopText = function(){
 	this.topPx = "";
 	this.leftPx = "";
 };
+var popCount = 0;
 
 function queryEle(selector){ 
 	var method = selector.substr(0,1) == "#" ? "getElementById":"getElementsByClassName";
@@ -35,9 +36,6 @@ queryEle("#text").onkeydown = function(e){
 	}
 };
 
-queryEle("#popText").addEventListener("hover",function(){
-
-})
 
 /*为button添加click事件监听*/
 queryEle("#spanButton").addEventListener("click",sendPop);
@@ -55,12 +53,21 @@ function creatPop(pop){
 	var popText = document.createElement("span");
 	var container = queryEle("#container");
 	var speed = 2;/*每次减少1px，移动速率*/
+	popCount++;
 	popText.style.color = pop.color;
 	popText.textContent = pop.value;
 	popText.style.top = pop.topPx;
 	popText.style.left = pop.leftPx;
 	popText.className = "popText";
-	popText.id = "popText";
+	popText.id = "popText"+popCount;
+	/*popText.addEventListener("mouseover",function(e){
+		var id = e.target.id.slice(7);
+		console.log(id);
+	});
+	popText.addEventListener("mouseout",function(e){
+		var id = e.target.id.slice(7);
+		console.log(id);
+	});*/
 	container.appendChild(popText);
 	movePop(popText,queryEle("#container").clientWidth,speed);
 }
